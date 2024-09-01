@@ -1,16 +1,16 @@
 repositories {
     mavenCentral()
     jcenter()
-    maven { url 'https://jitpack.io' }
+    maven("https://jitpack.io")
 }
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    compile group: 'khttp', name: 'khttp', version: '1.0.0'
-    implementation "org.jsoup:jsoup:1.11.3"
-    implementation 'com.github.Blatzar:NiceHttp:+'
+    implementation("org.jsoup:jsoup:+")
+    implementation("io.karn:khttp-android:+")
+    implementation("com.github.Blatzar:NiceHttp:+")
 }
 // use an integer for version numbers
 version = 1
