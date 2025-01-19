@@ -24,7 +24,12 @@ data class AnichiLoadData(
     val idMal: Int? = null,
 )
 
-class HydraHD(val plugin: HydraHDPlugin) : MainAPI() { // all providers must be an intstance of MainAPI
+suspend fun main() {
+    val providerTester = com.lagradost.cloudstreamtest.ProviderTester(HydraHD())
+    providerTester.testAll()
+}
+
+class HydraHD() : MainAPI() { // all providers must be an intstance of MainAPI
     override var mainUrl = "https://hydrahd.com"
     override var name = "HydraHD"
     var apiUrl = "https://hydrahd.com/ajax/tv_0.php"
@@ -48,7 +53,9 @@ class HydraHD(val plugin: HydraHDPlugin) : MainAPI() { // all providers must be 
         "trendingmovz" to "Trending Movies",
         "trendingshowz" to "Trending Series",
         "latestmovz" to "Latest Movies",
-        "latestshowz" to "Latest Series"
+        "latestshowz" to "Latest Series",
+        "ratedmovz" to "Top Rated Movies",
+        "ratedshowz" to "Top Rated Series"
     )
 
 
@@ -70,7 +77,7 @@ class HydraHD(val plugin: HydraHDPlugin) : MainAPI() { // all providers must be 
     ): HomePageResponse {
         val requests = Requests()
         val response = requests.get(mainUrl, headers=headers)
-        Log.d("d_response", response.toString())
+//        Log.d("d_response", response.toString())
 
         val soup = Jsoup.parse(response.text)
         val section = soup.select("div.${request.data}")[0]
@@ -171,17 +178,20 @@ class HydraHD(val plugin: HydraHDPlugin) : MainAPI() { // all providers must be 
 
 
     fun elementToSearchResponse(element: Element, genre: TvType=TvType.Movie): List<SearchResponse>{
-        val showList = element.select("figure.figured")
+        var showList = element.select("figure.figured")
+        if (showList.isEmpty()){
+            showList = element.select("div.swiper-slide")
+        }
 
         var results: MutableList<SearchResponse> = mutableListOf()
         for (show in showList) {
             val title = show.select("div.title")[0].text().trim()
-            val year = show.select("div.year")[0].text().trim()
-            val poster = show.select("img.img-responsive.hoverZoomLink.lazy-image")[0].attr("data-src")
+            val poster = show.select("img.lazy-image")[0].attr("data-src")
             val showLink = mainUrl + show.select("a")[0].attr("href")
 
             val infos: Elements = show.select("span")
             val quality = infos[0].text().trim()
+            val year = infos[3].text().trim()
 
             var type = genre
             if (infos.size > 1) {
