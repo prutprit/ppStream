@@ -11,6 +11,7 @@ dependencies {
     implementation("org.jsoup:jsoup:+")
     implementation("io.karn:khttp-android:+")
     implementation("com.github.Blatzar:NiceHttp:+")
+    implementation("org.seleniumhq.selenium:selenium-java:4.5.0")
 }
 // use an integer for version numbers
 version = 1

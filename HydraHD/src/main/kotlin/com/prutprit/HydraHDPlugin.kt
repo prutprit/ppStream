@@ -15,10 +15,5 @@ class HydraHDPlugin: Plugin() {
         activity = context as AppCompatActivity
         // All providers should be added in this manner
         registerMainAPI(HydraHD(this))
-
-        openSettings = { ctx ->
-            val frag = BlankFragment(this)
-            frag.show(activity!!.supportFragmentManager, "Frag")
-        }
     }
 }
